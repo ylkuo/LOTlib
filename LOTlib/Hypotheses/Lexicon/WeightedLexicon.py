@@ -18,7 +18,7 @@ class WeightedLexicon(SimpleLexicon):
     """
 
     def __init__(self,  make_hypothesis, alpha=0.90, palpha=0.90, **kwargs):
-        SimpleLexicon.__init__(self, make_hypothesis, **kwargs)
+        SimpleLexicon.__init__(self, make_hypothesis=make_hypothesis, **kwargs)
         self.alpha=alpha
         self.palpha=palpha
 

@@ -4,8 +4,8 @@ Demo MCMC through lexica. Generally does not work well (too slow) so use the vec
 
 """
 import re
-from LOTlib import mh_sample
-from LOTlib.Examples.Quantifier.Model import *
+from LOTlib.Inference.Samplers.MetropolisHastings import MHSampler
+from LOTlib.Projects.Quantifier.Model import *
 
 if __name__ == "__main__":
 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     h0 = GriceanQuantifierLexicon(make_my_hypothesis, my_weight_function)
 
     for w in target.all_words():
-        h0.set_word(w) # We will defautly generate from null the grammar if no value is specified
+        h0.set_word(w, make_my_hypothesis()) # We will defautly generate from null the grammar if no value is specified
 
     ### sample the target data
     data = generate_data(300)
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     print h0
 
     #### Now we have built the data, so run MCMC
-    for h in mh_sample(h0, data, 10000000, skip=0):
+    for h in MHSampler(h0, data, 10000000, skip=0):
 
         sstr = str(h)
         sstr = re.sub("[_ ]", "", sstr)

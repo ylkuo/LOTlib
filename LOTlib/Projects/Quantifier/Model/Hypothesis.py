@@ -5,7 +5,7 @@ import Grammar as G
 
 
 def make_my_hypothesis():
-    return LOTHypothesis(G.grammar, args=['context'])
+    return LOTHypothesis(G.grammar, display='lambda context: %s')
 
 class GriceanQuantifierLexicon(WeightedLexicon):
     """A simple class that always fixes our generating function to LOTHypothesis.

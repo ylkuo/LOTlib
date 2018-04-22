@@ -7,10 +7,10 @@ We could probably prove that any likelihood function that does not consider alte
 That the truth values of X are not enough to determine meaning if the subset problem is there....
 
 """
-from LOTlib.FiniteBestSet import FiniteBestSet
+from LOTlib.TopN import TopN
 from LOTlib.Hypotheses.LOTHypothesis import LOTHypothesis
-from LOTlib.Inference.Samplers.MetropolisHastings import mh_sample
-from LOTlib.Examples.Quantifier.Model import *
+from LOTlib.Inference.Samplers.MetropolisHastings import MHSampler
+from LOTlib.Projects.Quantifier.Model import *
 
 ALPHA = 0.9
 SAMPLES = 100000
@@ -25,14 +25,14 @@ if __name__ == "__main__":
 
     # Now to use it as a LOTHypothesis, we need data to have an "output" field which is true/false for whether its the target word. This is then used by LOTHypothesis.compute_likelihood to see if we match or not with whether a word was said (ignoring the other words -- that's why its a pseudolikelihood)
     for di in data:
-        di.output = (di.word == W)
+        di.output = (di.utterance == W)
         #print (di.word == W)
 
-    FBS = FiniteBestSet(max=True, N=100)
+    FBS = TopN(N=100)
 
-    H = LOTHypothesis(grammar, args=['A', 'B', 'S'], ALPHA=ALPHA)
+    H = LOTHypothesis(grammar, display='lambda A,B,S: %s', ALPHA=ALPHA)
     # Now just run the sampler with a LOTHypothesis
-    for s in mh_sample(H, data, SAMPLES, skip=10):
+    for s in MHSampler(H, data, SAMPLES, skip=10):
         #print s.lp, "\t", s.prior, "\t", s.likelihood, "\n", s, "\n\n"
         FBS.push(s, s.lp)
 

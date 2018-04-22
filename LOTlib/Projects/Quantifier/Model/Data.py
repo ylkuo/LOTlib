@@ -13,8 +13,8 @@ from random import randint
 from cachetools import lru_cache
 from LOTlib import break_ctrlc
 from LOTlib.DataAndObjects import *
-from LOTlib.Evaluation.Primitives.SetTheory import *
-from LOTlib.Evaluation.Primitives.Semantics import *
+from LOTlib.Primitives.SetTheory import *
+from LOTlib.Primitives.Semantics import *
 from LOTlib.Hypotheses.LOTHypothesis import LOTHypothesis
 from LOTlib.Miscellaneous import ifelse
 import Hypothesis as H, Grammar as G
@@ -25,9 +25,8 @@ import Hypothesis as H, Grammar as G
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 def make_my_hypothesis():
-    return LOTHypothesis(G.grammar, args=['context'])
+    return LOTHypothesis(G.grammar, display='lambda context: %s')
 
-@lru_cache
 def my_weight_function(h):
     return gricean_weight(h, TESTING_SET)
 

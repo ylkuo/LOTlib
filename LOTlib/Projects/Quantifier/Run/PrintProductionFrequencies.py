@@ -3,11 +3,11 @@
 Print the word probability of production according to the model
 
 """
-from LOTlib.Examples.Quantifier.Model import *
+from LOTlib.Projects.Quantifier.Model import *
 
 if __name__ == "__main__":
 
     print "# word production frequencies from our generative model"
     print "word model.frequency"
-    show_baseline_distribution()
+    show_baseline_distribution(TESTING_SET)
     print "\n\n"

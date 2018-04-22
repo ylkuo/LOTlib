@@ -7,10 +7,9 @@ from collections import defaultdict
 from scipy.stats import chisquare
 from LOTlib.Hypotheses.LOTHypothesis import LOTHypothesis
 from LOTlib.Miscellaneous import *
-from LOTlib.Evaluation.Eval import evaluate_expression
 import Grammar as G
 from Data import target, generate_data, my_weight_function, gricean_weight, make_my_hypothesis
-from LOTlib.Evaluation.Primitives.Semantics import is_undef
+from LOTlib.Primitives.Semantics import is_undef
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -31,7 +30,7 @@ def show_baseline_distribution(testing_set, N=1000):
 
 def is_conservative(h,testing_set):
     """Check if a hypothesis (funciton node) is conservative or not."""
-    f = evaluate_expression(h, ['context'])
+    f = eval(h, ['context'])
     for x in testing_set:
         a,b,s = x
         if f(a,b,s) != f(a, b.intersection(a), s.intersection(a) ): # HMM: is this right? We intersect s with a?
