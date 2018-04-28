@@ -5,9 +5,11 @@ Move out some functions from Shared -- things that aren't part of the core model
 from collections import defaultdict
 
 from scipy.stats import chisquare
+from LOTlib.FunctionNode import FunctionNode
 from LOTlib.Hypotheses.LOTHypothesis import LOTHypothesis
 from LOTlib.Miscellaneous import *
 import Grammar as G
+import Hypothesis as H
 from Data import target, generate_data, my_weight_function, gricean_weight, make_my_hypothesis
 from LOTlib.Primitives.Semantics import is_undef
 
@@ -28,12 +30,16 @@ def show_baseline_distribution(testing_set, N=1000):
         print frq[w], "\t", q(w), "\t", pct
 
 
-def is_conservative(h,testing_set):
+def is_conservative(h, testing_set):
     """Check if a hypothesis (funciton node) is conservative or not."""
-    f = eval(h, ['context'])
+    #print(str(h))
+    if isinstance(h, FunctionNode):
+        f = eval('lambda context: ' + str(h))
+    else:
+        f = h.fvalue
     for x in testing_set:
-        a,b,s = x
-        if f(a,b,s) != f(a, b.intersection(a), s.intersection(a) ): # HMM: is this right? We intersect s with a?
+        new_context = H.MyContext(A=x.A, B=x.B.intersection(x.A), S=x.S.intersection(x.A))
+        if f(x) != f(new_context): # HMM: is this right? We intersect s with a?
             return False
     return True
 
