@@ -11,7 +11,7 @@ from LOTlib.Miscellaneous import *
 import Grammar as G
 import Hypothesis as H
 from Data import target, generate_data, my_weight_function, gricean_weight, make_my_hypothesis
-from LOTlib.Primitives.Semantics import is_undef
+from LOTlib.Primitives.Semantics import is_undef, collapse_undef
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -26,7 +26,7 @@ def show_baseline_distribution(testing_set, N=1000):
 
     for w in frq.keys():
         # figure out how often its true:
-        pct = float(sum(map(lambda s: ifelse(target.value[w](s), 1.0, 0.0), testing_set) )) / len(testing_set)
+        pct = float(sum(map(lambda s: ifelse(target.value[w](s) and not is_undef(target.value[w](s)), 1.0, 0.0), testing_set) )) / len(testing_set)
         print frq[w], "\t", q(w), "\t", pct
 
 
