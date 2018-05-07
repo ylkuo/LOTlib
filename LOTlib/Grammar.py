@@ -122,7 +122,7 @@ class Grammar(CommonEqualityMixin):
 
         return lp
 
-    def add_rule(self, nt, name, to, p, bv_type=None, bv_args=None, bv_prefix='y', bv_p=None):
+    def add_rule(self, nt, name, to, p, term_type='none', bv_type=None, bv_args=None, bv_prefix='y', bv_p=None):
         """Adds a rule and returns the added rule.
 
         Arguments
@@ -139,7 +139,7 @@ class Grammar(CommonEqualityMixin):
         if bv_type is not None:
             newrule = BVAddGrammarRule(nt, name,to, p=p, bv_type=bv_type, bv_args=bv_args, bv_prefix=bv_prefix, bv_p=bv_p)
         else:
-            newrule = GrammarRule(nt, name, to, p=p)
+            newrule = GrammarRule(nt, name, to, term_type=term_type, p=p)
 
         self.rules[nt].append(newrule)
         return newrule
@@ -155,7 +155,7 @@ class Grammar(CommonEqualityMixin):
     # Generation
     # --------------------------------------------------------------------------------------------------------
 
-    def generate(self, x=None):
+    def generate(self, x=None, term_type='none'):
         """Generate from the grammar
 
         Arguments:
@@ -172,11 +172,23 @@ class Grammar(CommonEqualityMixin):
 
         # Dispatch different kinds of generation
         if isinstance(x,list):            
-            return map(lambda xi: self.generate(x=xi), x)             # If we get a list, just map along it to generate.
+            #print 'generate for list: ', x
+            ret = []
+            for i in range(len(x)):
+                if len(x) > 1 and i == 0:
+                    term_type = 'left'
+                elif len(x) > 1 and i == 1:
+                    term_type = 'right'
+                ret.append(self.generate(x=x[i], term_type=term_type))
+            return ret #map(lambda xi: self.generate(x=xi), x)             # If we get a list, just map along it to generate.
         elif self.is_nonterminal(x):
 
             # sample a grammar rule
             rules = self.get_rules(x)
+            if left:
+                rules = filter(lambda r: r.term_type == 'none' or r.term_type == 'left', rules)
+            else:
+                rules = filter(lambda r: r.term_type == 'right', rules)
             assert len(rules) > 0, "*** No rules in x=%s"%x
 
             # sample the rule

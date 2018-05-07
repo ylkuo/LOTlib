@@ -35,8 +35,14 @@ grammar.add_rule('SET', 'intersection_', ['SET', 'SET'], 1.0)
 grammar.add_rule('SET', 'setdifference_', ['SET', 'SET'], 1.0)
 
 # These will just be attributes of the current context
-grammar.add_rule('SET', 'context.A', None, 10.0)
-grammar.add_rule('SET', 'context.B', None, 10.0)
+#grammar.add_rule('SET', 'context.A', None, 10.0)
+#grammar.add_rule('SET', 'context.B', None, 10.0)
+grammar.add_rule('SET', 'context.A', None, 10.0, term_type='left')
+grammar.add_rule('SET', 'context.B', None, 2.0, term_type='left')
+grammar.add_rule('SET', 'context.A', None, 2.0, term_type='right')
+grammar.add_rule('SET', 'context.B', None, 10.0, term_type='right')
+grammar.add_rule('SET', 'context.A', None, 10.0, term_type='none')
+grammar.add_rule('SET', 'context.B', None, 10.0, term_type='none')
 #grammar.add_rule('SET', 'context.S', None, 10.0) ## Must include this or else we can't get complement
 
 # Cardinality operations

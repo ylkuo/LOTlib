@@ -81,11 +81,11 @@ class WeightedLexicon(SimpleLexicon):
 
         w = self.weightfunction(u, udi.context) # the current word weight
         if(u in trues):
-            p = self.palpha * self.alpha * w / true_weights + self.palpha *  \
-            (1.0 - self.alpha) * w / met_weights + (1.0 - self.palpha) * w / \
-            all_weights # choose from the trues
+            p = self.palpha * self.alpha * w / true_weights + \
+                self.palpha * (1.0 - self.alpha) * w / met_weights + \
+                (1.0 - self.palpha) * w / all_weights # choose from the trues
         elif (u in falses):
-            p = ifelse(true_weights==0, 1.0, 1.0-self.alpha) * self.palpha * w / met_weights + (1.0 - self.palpha) * w / all_weights # choose from the trues
+            p = ifelse(true_weights==0, 1.0, 1.0 - self.alpha) * self.palpha * w / met_weights + (1.0 - self.palpha) * w / all_weights # choose from the trues
         else:
             p = ifelse(met_weights==0, 1.0, (1.0 - self.palpha)) * w / all_weights
 

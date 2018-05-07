@@ -58,9 +58,9 @@ class FunctionNode(object):
       using get_rule_signature()
 
     """
-    NoCopy = {'self', 'parent', 'returntype', 'name', 'args', 'parent'}
+    NoCopy = {'self', 'parent', 'returntype', 'name', 'args', 'parent', 'term_type'}
 
-    def __init__(self, parent, returntype, name, args):
+    def __init__(self, parent, returntype, name, args, term_type='none'):
         self_update(self,locals())
         self.added_rule = None
         
@@ -85,7 +85,7 @@ class FunctionNode(object):
         """ The rule signature is used to pair up FunctionNodes with GrammarRules in computing log probability
             So it needs to be synced to GrammarRule.get_rule_signature and provide a unique identifier
         """
-        sig = [self.returntype, self.name]
+        sig = [self.returntype, self.name, self.term_type]
         if self.args is not None:
             sig.extend([a.returntype if isFunctionNode(a) else a for a in self.args])
         return tuple(sig)
@@ -103,7 +103,7 @@ class FunctionNode(object):
         The rule is NOT deeply copied (regardless of shallow)
 
         """
-        fn = FunctionNode(self.parent, self.returntype, self.name, None)
+        fn = FunctionNode(self.parent, self.returntype, self.name, None, term_type=self.term_type)
 
         # And then then copy the rest -- needed for if we add info to FunctionNodes, like a resample_p
         for k in set(self.__dict__.keys()).difference(FunctionNode.NoCopy): # None of these!
@@ -117,7 +117,7 @@ class FunctionNode(object):
         # and update 
         for a in fn.argFunctionNodes():
             a.parent = fn 
-
+        
         return fn 
         
     def is_nonfunction(self):

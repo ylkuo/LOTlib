@@ -36,7 +36,7 @@ class GrammarRule(object):
     The rule id (rid) is very important -- it's what we use expansion determine equality
 
     """
-    def __init__(self, nt, name, to, p=1.0, bv_prefix=None):
+    def __init__(self, nt, name, to, term_type='none', p=1.0, bv_prefix=None):
         p = float(p)
         assert p>0.0, "*** p=0 in rule %s %s %s. What are you thinking?" %(nt,name,to)
 
@@ -68,14 +68,14 @@ class GrammarRule(object):
 
     def get_rule_signature(self):
         """ Return a unique identifier for this rule. This must match up with FunctionNode.get_rule_signature """
-        sig = [self.nt, self.name]
+        sig = [self.nt, self.name, self.term_type]
         if self.to is not None:
             sig.extend(self.to)
         return tuple(sig)
 
     def make_FunctionNodeStub(self, grammar, parent):
         # NOTE: It is VERY important to copy to, or else we end up with big problems!
-        fn = FunctionNode(parent, returntype=self.nt, name=self.name, args=copy(self.to))
+        fn = FunctionNode(parent, returntype=self.nt, name=self.name, args=copy(self.to), term_type=self.term_type)
         assert fn.get_rule_signature() == self.get_rule_signature() # potentially not needed
         return fn
 
