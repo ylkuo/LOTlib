@@ -18,7 +18,7 @@ grammar.add_rule('START', 'presup_', ['False', 'BOOL'], 1.0)
 grammar.add_rule('START', 'presup_', ['False', 'False'], 1.0)
 grammar.add_rule('START', 'presup_', ['True', 'True'], 1.0)
 
-#grammar.add_rule('BOOL', 'not_', ['BOOL'], 1.0)
+grammar.add_rule('BOOL', 'not_', ['BOOL'], 1.0)
 #grammar.add_rule('BOOL', 'and_', ['BOOL', 'BOOL'], 1.0)
 #grammar.add_rule('BOOL', 'or_', ['BOOL', 'BOOL'], 1.0)
 grammar.add_rule('BOOL', 'nonempty_', ['SET'], 1.0) # don't need this if we do logical operations

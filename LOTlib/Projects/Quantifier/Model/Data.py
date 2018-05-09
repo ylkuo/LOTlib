@@ -98,41 +98,61 @@ print('Finished test set', len(TESTING_SET))
 
 # Write this out as a dictionary so that we can load it into a GriceanSimpleLexicon easier
 target_functions = {
-    'the': lambda context: presup_(
-        cardinality1_(context.A), nonempty_(intersection_(context.A, context.B))),
-    'a/some': lambda context: presup_(
-        True, nonempty_(intersection_(context.A, context.B))),
-    'one': lambda context: presup_(
-        nonempty_(context.A), cardinality1_(intersection_(context.A, context.B))),
-    'two': lambda context: presup_(
-        nonempty_(context.A), cardinality2_(intersection_(context.A, context.B))),
-    'three': lambda context: presup_(
-        nonempty_(context.A), cardinality3_(intersection_(context.A, context.B))),
-    'both': lambda context: presup_(
-        cardinality2_(context.A), cardinality2_(intersection_(context.A, context.B))),
-    'either': lambda context: presup_(
-        cardinality2_(context.A), cardinality1_(intersection_(context.A, context.B))),
-    'neither': lambda context: presup_(
-        cardinality2_(context.A), empty_(intersection_(context.A, context.B))),
+    #'the': lambda context: presup_(
+    #    cardinality1_(context.A), nonempty_(intersection_(context.A, context.B))),
+    #'a/some': lambda context: presup_(
+    #    True, nonempty_(intersection_(context.A, context.B))),
+    #'one': lambda context: presup_(
+    #    nonempty_(context.A), cardinality1_(intersection_(context.A, context.B))),
+    #'two': lambda context: presup_(
+    #    nonempty_(context.A), cardinality2_(intersection_(context.A, context.B))),
+    #'three': lambda context: presup_(
+    #    nonempty_(context.A), cardinality3_(intersection_(context.A, context.B))),
+    #'both': lambda context: presup_(
+    #    cardinality2_(context.A), cardinality2_(intersection_(context.A, context.B))),
+    #'either': lambda context: presup_(
+    #    cardinality2_(context.A), cardinality1_(intersection_(context.A, context.B))),
+    #'neither': lambda context: presup_(
+    #    cardinality2_(context.A), empty_(intersection_(context.A, context.B))),
     'every': lambda context: presup_(
         nonempty_(context.A), subset_(context.A, context.B)),
     'most': lambda context: presup_(
         nonempty_(context.A), cardinalitygt_(intersection_(context.A, context.B),
                                              setdifference_(context.A, context.B))),
-    'none/no': lambda context: presup_(
-        nonempty_(context.A), empty_(intersection_(context.A, context.B))),
+    #'none/no': lambda context: presup_(
+    #    nonempty_(context.A), empty_(intersection_(context.A, context.B))),
 
-    '1': lambda context: (presup_(False, False)),
-    '2': lambda context: (presup_(True, True)),
-    '3': lambda context: (presup_(True, nonempty_(context.A))),
-    '4': lambda context: (presup_(True, cardinality1_(context.A))),
-    '5': lambda context: (presup_(False, empty_(context.B))),
-    '6': lambda context: (presup_(True, subset_(context.B, context.A))),
-    '7': lambda context: (presup_(True, cardinalityeq_(context.A, context.B))),
-    '8': lambda context: (presup_(False, subset_(context.A, context.B))),
-    '9': lambda context: (presup_(cardinalityeq_(context.A, context.B), nonempty_(context.A))),
-    '10': lambda context: (presup_(cardinalitygt_(context.B, context.A), nonempty_(context.A))),
+    'gleeb': lambda context: presup_(
+        nonempty_(context.A), not_(subset_(context.A, context.B))),
+    'gleeb-prime': lambda context: presup_(
+        nonempty_(context.B), not_(subset_(context.B, context.A))),
 
+    'subset': lambda context: presup_(
+        True, subset_(context.A, context.B)),
+    'subset-prime': lambda context: presup_(
+        True, subset_(context.B, context.A)),
+
+    'differ': lambda context: presup_(
+        True, cardinality1_(setdifference_(context.A, context.B))),
+    'differ-prime': lambda context: presup_(
+        True, cardinality1_(setdifference_(context.B, context.A))),
+
+    'every-prime': lambda context: presup_(
+        nonempty_(context.B), subset_(context.B, context.A)),
+    'most-prime': lambda context: presup_(
+        nonempty_(context.B), cardinalitygt_(intersection_(context.A, context.B),
+                                             setdifference_(context.B, context.A))),
+
+    #'1': lambda context: (presup_(False, False)),
+    #'2': lambda context: (presup_(True, True)),
+    #'3': lambda context: (presup_(True, nonempty_(context.A))),
+    #'4': lambda context: (presup_(True, cardinality1_(context.A))),
+    #'5': lambda context: (presup_(False, empty_(context.B))),
+    #'6': lambda context: (presup_(True, subset_(context.B, context.A))),
+    #'7': lambda context: (presup_(True, cardinalityeq_(context.A, context.B))),
+    #'8': lambda context: (presup_(False, subset_(context.A, context.B))),
+    #'9': lambda context: (presup_(cardinalityeq_(context.A, context.B), nonempty_(context.A))),
+    #'10': lambda context: (presup_(cardinalitygt_(context.B, context.A), nonempty_(context.A))),
 
     #
     # 'few': lambda context: presup_(
