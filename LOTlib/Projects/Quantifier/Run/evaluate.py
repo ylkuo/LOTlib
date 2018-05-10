@@ -43,5 +43,5 @@ if __name__ == "__main__":
             if data_size == 0:
                 pass
             else:
-                hypotheses = construct_hypothesis_space()
+                hypotheses = construct_hypothesis_space(data_size)
                 pickle.dump(hypotheses, open('data/hypset_cfg_'+str(data_size)+'.pickle', 'w'))
