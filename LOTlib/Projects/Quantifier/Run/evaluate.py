@@ -9,7 +9,8 @@ from LOTlib.Projects.Quantifier.Model import *
 from LOTlib.TopN import TopN
 
 SAMPLES = 10000
-RUNS = 1000
+RUNS = 1
+NUM_CPU = 20
 
 def construct_hypothesis_space(data_size):
     all_hypotheses = TopN()
@@ -21,8 +22,12 @@ def construct_hypothesis_space(data_size):
         learner = GriceanQuantifierLexicon(make_my_hypothesis, my_weight_function)
         for w in target.all_words():
             learner.set_word(w, make_my_hypothesis())
+        j = 0
         for h in MHSampler(learner, data, SAMPLES, skip=0):
             hypotheses.add(h)
+            j += 1
+            if j > 0 and j % 1000 == 0:
+                pickle.dump(hypotheses, open('data/hypset_cfg_'+str(data_size)+'_'+str(j)+'.pickle', 'w'))
             #sstr = str(h)
             #sstr = re.sub("[_ ]", "", sstr)
             #sstr = re.sub("presup", u"\u03BB A B . presup", sstr)
@@ -38,7 +43,7 @@ def prob_correct():
 
 if __name__ == "__main__":
     print('===== Constructing hypothesis space =====')
-    with pymp.Parallel(20) as p:
+    with pymp.Parallel(NUM_CPU) as p:
         for data_size in p.range(0, 2050, 100):
             if data_size == 0:
                 pass
