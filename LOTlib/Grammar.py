@@ -185,10 +185,14 @@ class Grammar(CommonEqualityMixin):
 
             # sample a grammar rule
             rules = self.get_rules(x)
-            if left:
-                rules = filter(lambda r: r.term_type == 'none' or r.term_type == 'left', rules)
-            else:
+            if term_type == 'left':
+                rules = filter(lambda r: r.term_type == 'left', rules)
+            elif term_type == 'right':
                 rules = filter(lambda r: r.term_type == 'right', rules)
+            else:
+                rules = filter(lambda r: r.term_type == 'none', rules)
+            if len(rules) == 0:
+                rules = filter(lambda r: r.term_type == 'none', self.get_rules(x))
             assert len(rules) > 0, "*** No rules in x=%s"%x
 
             # sample the rule
