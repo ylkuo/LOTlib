@@ -13,6 +13,7 @@ from scipy.special import logsumexp
 
 DEPTH_TO_ENUMERATE_PRIOR = 4
 NUM_TOP_PRIORS = 1000
+MAX_NODES = 10
 
 if __name__ == "__main__":
     ### sample the target data
@@ -35,27 +36,13 @@ if __name__ == "__main__":
         print word, ', ', likelihood
     '''
 
-    def check_expansion(node, term_type='none'):
-        if not isFunctionNode(node):
-            return True
-        if node.term_type != term_type:
-            return False
-        args = node.args
-        if args is None:
-            return True
-        elif len(args) == 1:
-            return check_expansion(args[0])
-        elif 'presup_' in str(node):
-            return check_expansion(args[0]) and check_expansion(args[1])
-        else:
-            return check_expansion(args[0], 'left') and check_expansion(args[1], 'right')
-        return True
-
     print('===== Enumerate grammar and prior (log probability) =====')
     hypotheses = []
     conserve_prob = []
     non_conserve_prob = []
     for t in grammar.enumerate(d=DEPTH_TO_ENUMERATE_PRIOR):
+        if t.count_subnodes() > MAX_NODES:
+            continue
         if 'presup_(False' in str(t):
             continue
         if not check_expansion(t):

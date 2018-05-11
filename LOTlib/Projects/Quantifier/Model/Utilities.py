@@ -5,7 +5,7 @@ Move out some functions from Shared -- things that aren't part of the core model
 from collections import defaultdict
 
 from scipy.stats import chisquare
-from LOTlib.FunctionNode import FunctionNode
+from LOTlib.FunctionNode import *
 from LOTlib.Hypotheses.LOTHypothesis import LOTHypothesis
 from LOTlib.Miscellaneous import *
 import Grammar as G
@@ -29,6 +29,21 @@ def show_baseline_distribution(testing_set, N=1000):
         pct = float(sum(map(lambda s: ifelse(target.value[w](s) and not is_undef(target.value[w](s)), 1.0, 0.0), testing_set) )) / len(testing_set)
         print frq[w], "\t", q(w), "\t", pct
 
+def check_expansion(node, term_type='none'):
+    if not isFunctionNode(node):
+        return True
+    if node.term_type != term_type:
+        return False
+    args = node.args
+    if args is None:
+        return True
+    elif len(args) == 1:
+        return check_expansion(args[0])
+    elif 'presup_' in str(node):
+        return check_expansion(args[0]) and check_expansion(args[1])
+    else:
+        return check_expansion(args[0], 'left') and check_expansion(args[1], 'right')
+    return True
 
 def is_conservative(h, testing_set):
     """Check if a hypothesis (funciton node) is conservative or not."""
