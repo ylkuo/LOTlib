@@ -8,6 +8,7 @@ from collections import defaultdict
 
 from LOTlib.Hypotheses.LOTHypothesis import LOTHypothesis
 from LOTlib.Inference.Samplers.MetropolisHastings import MHSampler
+from LOTlib.Miscellaneous import logsumexp
 from LOTlib.Projects.Quantifier.Model import *
 from LOTlib.TopN import TopN
 
