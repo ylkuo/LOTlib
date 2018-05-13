@@ -18,6 +18,7 @@ CONSTRUCT_HSPACE = False
 
 GRAMMAR_TYPE = 'cfg'
 MAX_DATA_SIZE = 2050
+SAMPLE_SIZE = 3000
 
 def construct_hypothesis_space(data_size):
     all_hypotheses = TopN()
@@ -45,13 +46,13 @@ def construct_hypothesis_space(data_size):
 def get_hypotheses():
     all_hypotheses = TopN()
     for data_size in range(100, MAX_DATA_SIZE, 100):
-        hypotheses = pickle.load(open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'.pickle'))
+        hypotheses = pickle.load(open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'_'+str(SAMPLE_SIZE)+'.pickle'))
         all_hypotheses.update(hypotheses)
     return all_hypotheses
 
 def agree_pct(hypotheses):
     # get all the words
-    words = hypotheses[0].all_words() # just get the words from the first hypothesis
+    words = hypotheses.best().all_words() # just get the words from the first hypothesis
     # now figure out how often each meaning is right for each word
     agree_pct = dict()  # how often does each part of meaning agree with each word?
     agree_pct_presup = dict()
@@ -77,6 +78,7 @@ def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_l
 
     data = generate_data(data_size)
     # recompute posterior
+    print 'Compute posterior for ', str(data_size)
     [x.compute_posterior(data) for x in hypotheses]
     # normalize the posterior in fs
     Z = logsumexp([x.posterior_score for x in hypotheses])
@@ -123,6 +125,7 @@ if __name__ == "__main__":
     print('===== Computing stats =====')
     hypotheses = get_hypotheses()
     agree_pct, agree_pct_presup, agree_pct_literal = agree_pct(hypotheses)
-    for data_size in range(100, 2050, 100):
-        prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_literal)
+    with pymp.Parallel(NUM_CPU) as p:
+        for data_size in p.range(100, 2050, 100):
+            prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_literal)
 
