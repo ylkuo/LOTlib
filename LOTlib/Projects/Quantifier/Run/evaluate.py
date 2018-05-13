@@ -92,6 +92,7 @@ def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_l
     #    for w in h.all_words():
     #        fprintn(8, data_size, i, w, h.posterior_score, q(h.value[w]), f=OUT_PATH+"-hypotheses.txt")
 
+    words = hypotheses.best().all_words()
     # and compute the probability of being correct
     for h in hypotheses:
         hstr = str(h)
