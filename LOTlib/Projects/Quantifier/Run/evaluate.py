@@ -97,7 +97,7 @@ def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_l
     for h in hypotheses:
         hstr = str(h)
         for w in words:
-            p = exp(h.posterior_score - Z)
+            p = np.exp(h.posterior_score - Z)
             key = w + ":" + hstr
             p_representation[w] += p * (agree_pct[key] == 1.)
             p_representation_presup[w]  += p * (agree_pct_presup[key] == 1.) # if we always agree with the target, then we count as the right rep.
