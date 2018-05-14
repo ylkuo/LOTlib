@@ -19,7 +19,7 @@ CONSTRUCT_HSPACE = False
 
 GRAMMAR_TYPE = 'cfg'
 MAX_DATA_SIZE = 2050
-SAMPLE_SIZE = 3000
+SAMPLE_SIZE = 4000
 
 def construct_hypothesis_space(data_size):
     all_hypotheses = TopN()
@@ -47,7 +47,10 @@ def construct_hypothesis_space(data_size):
 def get_hypotheses():
     all_hypotheses = TopN()
     for data_size in range(100, MAX_DATA_SIZE, 100):
-        hypotheses = pickle.load(open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'_'+str(SAMPLE_SIZE)+'.pickle'))
+        try:
+            hypotheses = pickle.load(open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'_'+str(SAMPLE_SIZE)+'.pickle'))
+        except:
+            continue
         all_hypotheses.update(hypotheses)
     return all_hypotheses
 
@@ -108,8 +111,13 @@ def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_l
             p_response_presup[w]  += p * agree_pct_presup[key]
             p_response_literal[w] += p * agree_pct_literal[key]
 
+    filename = 'results/correctness_'+GRAMMAR_TYPE+'_'+str(SAMPLE_SIZE)+'.txt'
+    f = open(filename, 'a')
     for w in words:
-        print w, data_size, p_representation[w], p_representation_presup[w], p_representation_literal[w], p_response[w], p_response_presup[w], p_response_literal[w]
+        col = [w, str(data_size), str(p_representation[w]),
+               str(p_representation_presup[w]), str(p_representation_literal[w]),
+               str(p_response[w]), str(p_response_presup[w]), str(p_response_literal[w])]
+        f.write(','.join(col))
 
 
 if __name__ == "__main__":
