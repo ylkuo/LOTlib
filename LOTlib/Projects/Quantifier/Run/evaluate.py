@@ -119,7 +119,7 @@ def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_l
         col = [w, str(data_size), str(p_representation[w]),
                str(p_representation_presup[w]), str(p_representation_literal[w]),
                str(p_response[w]), str(p_response_presup[w]), str(p_response_literal[w])]
-        f.write(','.join(col))
+        f.write(','.join(col) + '\n')
 
 
 if __name__ == "__main__":
