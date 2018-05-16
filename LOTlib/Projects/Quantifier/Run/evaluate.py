@@ -19,7 +19,6 @@ CONSTRUCT_HSPACE = False
 
 GRAMMAR_TYPE = 'cfg'
 MAX_DATA_SIZE = 2050
-SAMPLE_SIZE = 4000
 
 def construct_hypothesis_space(data_size):
     all_hypotheses = TopN()
@@ -47,10 +46,13 @@ def construct_hypothesis_space(data_size):
 def get_hypotheses():
     all_hypotheses = TopN()
     for data_size in range(100, MAX_DATA_SIZE, 100):
-        try:
-            hypotheses = pickle.load(open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'_'+str(SAMPLE_SIZE)+'.pickle'))
-        except:
-            continue
+        hypotheses = None
+        sample_size = 10000
+        while hypotheses is None:
+            try:
+                hypotheses = pickle.load(open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'_'+str(sample_size)+'.pickle'))
+            except:
+                sample_size -= 1000
         all_hypotheses.update(hypotheses)
     return all_hypotheses
 
