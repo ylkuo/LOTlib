@@ -19,6 +19,7 @@ CONSTRUCT_HSPACE = False
 
 GRAMMAR_TYPE = 'cfg'
 MAX_DATA_SIZE = 2050
+SAMPLE_SIZE = 5000
 
 def construct_hypothesis_space(data_size):
     all_hypotheses = TopN()
