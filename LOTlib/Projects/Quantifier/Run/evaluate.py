@@ -57,6 +57,9 @@ def get_hypotheses():
         all_hypotheses.update(hypotheses)
     return all_hypotheses
 
+def is_agree(l1, l2):
+    return [x == y for (x, y) in zip(l1, l2)]
+
 def agree_pct(hypotheses):
     # get all the words
     words = hypotheses.best().all_words() # just get the words from the first hypothesis
@@ -70,9 +73,9 @@ def agree_pct(hypotheses):
             hresp = [ h.value[w](t)      for t in TESTING_SET]
 
             key = w+":"+str(h)
-            agree_pct[key]         = np.mean(collapse_undefs(tresp) == collapse_undefs(hresp))
-            agree_pct_presup[key]  = np.mean(extract_presup(tresp)  == extract_presup(hresp))
-            agree_pct_literal[key] = np.mean(extract_literal(tresp) == extract_literal(hresp))
+            agree_pct[key]         = np.mean(is_agree(collapse_undefs(tresp), collapse_undefs(hresp)))
+            agree_pct_presup[key]  = np.mean(is_agree(extract_presup(tresp), extract_presup(hresp)))
+            agree_pct_literal[key] = np.mean(is_agree(extract_literal(tresp), extract_literal(hresp)))
     return agree_pct, agree_pct_presup, agree_pct_literal
 
 def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_literal):
