@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-SAMPLE_SIZE = 4000
+SAMPLE_SIZE = 6000
 
 cfg_correctness = {
     'every': [0],
@@ -33,7 +33,7 @@ def read_correctness(grammar_type):
     for line in lines:
         cols = line.split(',')
         word = cols[0]
-        correctness = float(cols[2])
+        correctness = float(cols[-3])
         if grammar_type == 'cfg':
             cfg_correctness[word].append(correctness)
         elif grammar_type == 'csg':
@@ -46,6 +46,8 @@ def plot(word):
     plt.plot(cfg_correctness[word], 'r')
     plt.plot(csg_correctness[word], 'b')
     #plt.ylabel('some numbers')
+    vals = ax.get_xticks()
+    ax.set_xticklabels(['{:4.0f}'.format(x*100) for x in vals])
     fig.savefig('figures/'+word+'.png')
 
 read_correctness('cfg')
