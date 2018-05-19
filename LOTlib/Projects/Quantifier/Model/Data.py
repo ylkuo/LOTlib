@@ -87,9 +87,9 @@ for adb in xrange(APD_N):
                 all_possible_context_sets.append( [adb_.union(anb_), bda_.union(anb_), s_])
 #print(all_possible_context_sets[-1])
 
-TESTING_SET = [sample_context() for x in xrange(TESTING_SET_SIZE)]
-print('Finished test set', len(TESTING_SET))
-#TESTING_SET = [H.MyContext(A=x[0], B=x[1], S=x[2]) for x in all_possible_context_sets]
+#TESTING_SET = [sample_context() for x in xrange(TESTING_SET_SIZE)]
+#print('Finished test set', len(TESTING_SET))
+TESTING_SET = [H.MyContext(A=x[0], B=x[1], S=x[2]) for x in all_possible_context_sets]
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
