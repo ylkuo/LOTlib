@@ -19,6 +19,7 @@ CONSTRUCT_HSPACE = False
 
 GRAMMAR_TYPE = 'cfg'
 MAX_DATA_SIZE = 2050
+EVAL_NUM = 5
 SAMPLE_SIZE = 5000
 
 def construct_hypothesis_space(data_size):
@@ -86,36 +87,30 @@ def prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_l
     p_representation_presup = defaultdict(int) # how often do you get the right representation
     p_response_presup = defaultdict(int) # how often do you get the right response?
 
-    data = generate_data(data_size)
-    # recompute posterior
-    print 'Compute posterior for ', str(data_size)
-    [x.compute_posterior(data) for x in hypotheses]
-    # normalize the posterior in fs
-    Z = logsumexp([x.posterior_score for x in hypotheses])
+    weight = 1. / EVAL_NUM
+    for _ in range(EVAL_NUM):
+        data = generate_data(data_size)
+        # recompute posterior
+        print 'Compute posterior for ', str(data_size)
+        [x.compute_posterior(data) for x in hypotheses]
+        # normalize the posterior in fs
+        Z = logsumexp([x.posterior_score for x in hypotheses])
 
-    # and output the top hypotheses
-    #qq = TopN(N=25)
-    #for h in hypotheses:
-    #    qq.push(h, h.posterior_score) # get the tops
-    #for i, h in enumerate(qq.get_all(sorted=True)):
-    #    for w in h.all_words():
-    #        fprintn(8, data_size, i, w, h.posterior_score, q(h.value[w]), f=OUT_PATH+"-hypotheses.txt")
+        words = hypotheses.best().all_words()
+        # and compute the probability of being correct
+        for h in hypotheses:
+            hstr = str(h)
+            for w in words:
+                p = np.exp(h.posterior_score - Z)
+                key = w + ":" + hstr
+                p_representation[w] += weight * p * (agree_pct[key] == 1.)
+                p_representation_presup[w]  += weight * p * (agree_pct_presup[key] == 1.) # if we always agree with the target, then we count as the right rep.
+                p_representation_literal[w] += weight * p * (agree_pct_literal[key] == 1.)
 
-    words = hypotheses.best().all_words()
-    # and compute the probability of being correct
-    for h in hypotheses:
-        hstr = str(h)
-        for w in words:
-            p = np.exp(h.posterior_score - Z)
-            key = w + ":" + hstr
-            p_representation[w] += p * (agree_pct[key] == 1.)
-            p_representation_presup[w]  += p * (agree_pct_presup[key] == 1.) # if we always agree with the target, then we count as the right rep.
-            p_representation_literal[w] += p * (agree_pct_literal[key] == 1.)
-
-            # and just how often does the hypothesis agree?
-            p_response[w] += p * agree_pct[key]
-            p_response_presup[w]  += p * agree_pct_presup[key]
-            p_response_literal[w] += p * agree_pct_literal[key]
+                # and just how often does the hypothesis agree?
+                p_response[w] += weight * p * agree_pct[key]
+                p_response_presup[w]  += weight * p * agree_pct_presup[key]
+                p_response_literal[w] += weight * p * agree_pct_literal[key]
 
     filename = 'results/correctness_'+GRAMMAR_TYPE+'_'+str(SAMPLE_SIZE)+'.txt'
     f = open(filename, 'a')
