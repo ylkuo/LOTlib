@@ -131,12 +131,12 @@ if __name__ == "__main__":
                 else:
                     hypotheses = construct_hypothesis_space(data_size)
                     pickle.dump(hypotheses, open('data/hypset_'+GRAMMAR_TYPE+'_'+str(data_size)+'.pickle', 'w'))
-
-    # compute correctness
-    print('===== Computing stats =====')
-    hypotheses = get_hypotheses()
-    agree_pct, agree_pct_presup, agree_pct_literal = agree_pct(hypotheses)
-    with pymp.Parallel(NUM_CPU) as p:
-        for data_size in p.range(100, 2050, 100):
-            prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_literal)
+    else:
+        # compute correctness
+        print('===== Computing stats =====')
+        hypotheses = get_hypotheses()
+        agree_pct, agree_pct_presup, agree_pct_literal = agree_pct(hypotheses)
+        with pymp.Parallel(NUM_CPU) as p:
+            for data_size in p.range(100, 2050, 100):
+                prob_correct(data_size, hypotheses, agree_pct, agree_pct_presup, agree_pct_literal)
 
